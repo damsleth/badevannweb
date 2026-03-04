@@ -101,7 +101,14 @@ Stottede variabler:
 ```bash
 npm run lint
 npm run test
+npm run test:e2e
 npm run build
+```
+
+Kjor Playwright-installasjon av nettleser ved forste oppsett:
+
+```bash
+npm exec --workspace web playwright install chromium
 ```
 
 ## Testdekning
@@ -119,3 +126,12 @@ npm run build
 3. Klikk i liste viser detaljer
 4. Toppliste rangerer varmest forst
 5. Error-state vises ved fetch-feil
+6. E2E brukerflyt med Playwright:
+   - Loading og loaded state
+   - Sok med debounce
+   - Fylke- og kommune-filtrering
+   - Sortering
+   - Valg av badeplass fra toppliste og hovedliste
+   - Empty state
+   - Error og stale status state
+   - Skjermbilder for desktop og mobil

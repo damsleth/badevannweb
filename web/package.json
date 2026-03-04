@@ -8,9 +8,11 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.2",
     "@types/node": "^24.3.3",
     "jsdom": "^26.1.0",
     "typescript": "^5.9.3",
