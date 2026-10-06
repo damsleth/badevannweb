@@ -9,9 +9,16 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "uxl:init": "uxl init",
+    "uxl:flows": "uxl flows check",
+    "uxl:shots": "uxl shots",
+    "uxl:review": "uxl review",
+    "uxl:implement": "uxl implement",
+    "uxl:run": "uxl run"
   },
   "devDependencies": {
+    "@damsleth/ux-loop": "file:../../../ux-loop",
     "@playwright/test": "^1.54.2",
     "@types/node": "^24.3.3",
     "jsdom": "^26.1.0",
