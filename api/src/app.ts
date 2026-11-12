@@ -31,6 +31,11 @@ export function createApp(options?: CreateAppOptions) {
   app.use('/api/meta', createMetaRouter(dataClient))
   app.use('/api', createTemperatureRouter(dataClient))
 
+  // Production: serve the built web app from the same process
+  if (process.env.WEB_DIST) {
+    app.use(express.static(process.env.WEB_DIST))
+  }
+
   app.use(notFoundHandler)
   app.use(errorHandler)
 
