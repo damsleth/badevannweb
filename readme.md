@@ -25,7 +25,7 @@ Query `sort` støtter:
 3. `name_asc`
 4. `newest_desc`
 
-Validering gjores med `zod`.
+Validering gjøres med `zod`.
 
 Dataflyt:
 
@@ -38,23 +38,13 @@ Merk: import av `badevann/src/...` er privat API og kan bryte ved fremtidige maj
 
 ### Frontend (`/web`)
 
-SPA med disse custom elements:
+SPA med ett custom element, `badevann-app`:
 
-1. `badevann-app`
-2. `bv-filter-bar`
-3. `bv-toplist`
-4. `bv-temperature-list`
-5. `bv-beach-detail`
-6. `bv-status-bar`
-
-Funksjoner i v1:
-
-1. Sok med debounce (250ms)
-2. Filtrering per fylke og kommune
-3. Sortering
-4. Toppliste
-5. Detaljpanel for valgt badeplass
-6. Loading/error/empty states
+1. Søk på badeplass, kommune eller fylke
+2. «Bruk min posisjon» sorterer nærmest først og viser avstand
+3. Sortering: varmest, kaldest, nærmest, sist målt, navn
+4. Utvidbare rader med måletidspunkt og lenker til kart og Yr
+5. Loading/error/empty states
 
 ## Kom i gang
 
@@ -71,7 +61,7 @@ npm install
 
 ### Lokal utvikling
 
-Kjor API og web samtidig:
+Kjør API og web samtidig:
 
 ```bash
 npm run dev
@@ -82,7 +72,7 @@ Standard porter:
 1. API: `http://localhost:3000`
 2. Web: `http://localhost:5173`
 
-### Miljovariabler
+### Miljøvariabler
 
 Kopier `.env.example` hvis du vil overstyre defaults:
 
@@ -90,7 +80,7 @@ Kopier `.env.example` hvis du vil overstyre defaults:
 cp .env.example .env
 ```
 
-Stottede variabler:
+Støttede variabler:
 
 1. `API_PORT`
 2. `CORS_ORIGIN`
@@ -105,7 +95,7 @@ npm run test:e2e
 npm run build
 ```
 
-Kjor Playwright-installasjon av nettleser ved forste oppsett:
+Kjør Playwright-installasjon av nettleser ved første oppsett:
 
 ```bash
 npm exec --workspace web playwright install chromium
@@ -115,23 +105,21 @@ npm exec --workspace web playwright install chromium
 
 ### Backend
 
-1. Query-logikk: sok/filter/sort/limit
+1. Query-logikk: søk/filter/sort/limit
 2. Cache-styring + stale fallback
 3. API-integrasjon med `supertest`
 
 ### Frontend
 
-1. Debounced sok oppdaterer liste
-2. Filter oppdaterer visning
-3. Klikk i liste viser detaljer
-4. Toppliste rangerer varmest forst
-5. Error-state vises ved fetch-feil
-6. E2E brukerflyt med Playwright:
+1. Søk på navn og kommune oppdaterer listen
+2. Liste sorteres varmest først
+3. «Bruk min posisjon» sorterer nærmest først
+4. Error-state vises ved fetch-feil
+5. E2E brukerflyt med Playwright:
    - Loading og loaded state
-   - Sok med debounce
-   - Fylke- og kommune-filtrering
+   - Søk og empty state
    - Sortering
-   - Valg av badeplass fra toppliste og hovedliste
-   - Empty state
+   - Utvide badeplass for detaljer
+   - Nærmest først med posisjon
    - Error og stale status state
    - Skjermbilder for desktop og mobil

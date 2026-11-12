@@ -1,32 +1,22 @@
-export type SortType =
-  | 'temperature_desc'
-  | 'temperature_asc'
-  | 'name_asc'
-  | 'newest_desc'
+export type SortType = 'temperature_desc' | 'temperature_asc' | 'distance' | 'newest_desc' | 'name_asc'
+
+export interface Position {
+  lat: number
+  lon: number
+}
 
 export interface BeachTemperature {
   id: number
   temperature: number
   time: string
   location: {
+    id?: string
     name: string
     urlPath: string
-    position: {
-      lat: number
-      lon: number
-    }
-    region?: {
-      id?: string
-      name?: string
-    } | null
-    subregion?: {
-      id?: string
-      name?: string
-    } | null
-    category?: {
-      id?: string
-      name?: string
-    } | null
+    position: Position
+    region?: { id?: string; name?: string } | null
+    subregion?: { id?: string; name?: string } | null
+    category?: { id?: string; name?: string } | null
   }
   sourceDisplayName?: string | null
   emoji: string
@@ -39,23 +29,4 @@ export interface TemperatureListResponse {
   total: number
   count: number
   items: BeachTemperature[]
-}
-
-export interface TopResponse {
-  updatedAt: string
-  stale: boolean
-  count: number
-  items: BeachTemperature[]
-}
-
-export interface MetaResponse {
-  updatedAt: string
-  stale: boolean
-  counts: {
-    beaches: number
-    counties: number
-    municipalities: number
-  }
-  counties: string[]
-  municipalities: string[]
 }

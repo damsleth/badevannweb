@@ -1,22 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import './bv-filter-bar.js'
-import './bv-toplist.js'
-import './bv-temperature-list.js'
-import './bv-beach-detail.js'
-import './bv-status-bar.js'
-import './badevann-app.js'
+import { distanceKm } from './badevann-app.js'
 
-const fakeMeta = {
-  updatedAt: '2026-03-04T10:00:00.000Z',
-  stale: false,
-  counts: {
-    beaches: 3,
-    counties: 2,
-    municipalities: 2
+const beach = (id: number, name: string, temperature: number, time: string, municipality: string, county: string, lat: number, lon: number) => ({
+  id,
+  temperature,
+  time,
+  location: {
+    name,
+    urlPath: `Norge/${county}/${municipality}/${name}`,
+    position: { lat, lon },
+    region: { name: county },
+    subregion: { name: municipality },
+    category: { name: 'Badeplass' }
   },
-  counties: ['Oslo', 'Akershus'],
-  municipalities: ['Oslo', 'Bærum']
-}
+  sourceDisplayName: null,
+  emoji: '',
+  bucket: 'cool'
+})
 
 const fakeTemperatures = {
   updatedAt: '2026-03-04T10:00:00.000Z',
@@ -24,158 +24,76 @@ const fakeTemperatures = {
   total: 3,
   count: 3,
   items: [
-    {
-      id: 1,
-      temperature: 16,
-      time: '2026-03-04T10:00:00+01:00',
-      location: {
-        name: 'Sørenga',
-        urlPath: 'Norge/Oslo/Oslo',
-        position: { lat: 1, lon: 1 },
-        region: { name: 'Oslo' },
-        subregion: { name: 'Oslo' },
-        category: { name: 'Bydel' }
-      },
-      sourceDisplayName: null,
-      emoji: '😑',
-      bucket: 'cool'
-    },
-    {
-      id: 2,
-      temperature: 9,
-      time: '2026-03-03T10:00:00+01:00',
-      location: {
-        name: 'Kalvøya',
-        urlPath: 'Norge/Akershus/Baerum',
-        position: { lat: 1, lon: 1 },
-        region: { name: 'Akershus' },
-        subregion: { name: 'Bærum' },
-        category: { name: 'Oy' }
-      },
-      sourceDisplayName: null,
-      emoji: '⛄️',
-      bucket: 'cold'
-    },
-    {
-      id: 3,
-      temperature: 19,
-      time: '2026-03-02T10:00:00+01:00',
-      location: {
-        name: 'Bygdøy',
-        urlPath: 'Norge/Oslo/Oslo',
-        position: { lat: 1, lon: 1 },
-        region: { name: 'Oslo' },
-        subregion: { name: 'Oslo' },
-        category: { name: 'Bydel' }
-      },
-      sourceDisplayName: null,
-      emoji: '😊',
-      bucket: 'comfortable'
-    }
+    beach(1, 'Sørenga', 16, '2026-03-04T10:00:00+01:00', 'Oslo', 'Oslo', 59.9, 10.75),
+    beach(2, 'Kalvøya', 9, '2026-03-03T10:00:00+01:00', 'Bærum', 'Akershus', 59.88, 10.52),
+    beach(3, 'Bygdøy', 19, '2026-03-02T10:00:00+01:00', 'Oslo', 'Oslo', 59.91, 10.68)
   ]
 }
 
 beforeEach(() => {
-  vi.useRealTimers()
   document.body.innerHTML = ''
-
-  global.fetch = vi.fn(async (input: string | URL | Request) => {
-    const url = typeof input === 'string' ? input : input instanceof URL ? input.pathname : input.url
-
-    if (url.includes('/api/meta')) {
-      return {
-        ok: true,
-        json: async () => fakeMeta
-      } as Response
-    }
-
-    if (url.includes('/api/temperatures')) {
-      return {
-        ok: true,
-        json: async () => fakeTemperatures
-      } as Response
-    }
-
-    return {
-      ok: false,
-      status: 500,
-      json: async () => ({})
-    } as Response
-  }) as typeof fetch
+  global.fetch = vi.fn(async () => ({ ok: true, json: async () => fakeTemperatures }) as Response) as typeof fetch
 })
 
-async function flushAppLoad(): Promise<void> {
-  await Promise.resolve()
-  await Promise.resolve()
-  await Promise.resolve()
+async function mount(): Promise<void> {
+  await import('./badevann-app.js')
+  document.body.innerHTML = '<badevann-app></badevann-app>'
+  await new Promise((resolve) => setTimeout(resolve))
 }
 
-describe('badevann app components', () => {
-  it('search input updates list after debounce', async () => {
-    vi.useFakeTimers()
-    document.body.innerHTML = '<badevann-app></badevann-app>'
-    await flushAppLoad()
+const names = () => Array.from(document.querySelectorAll('.list-row .name')).map((el) => el.textContent)
 
-    const input = document.querySelector<HTMLInputElement>('input#q')
-    expect(input).toBeTruthy()
+function search(value: string): void {
+  const input = document.querySelector<HTMLInputElement>('input#q')!
+  input.value = value
+  input.dispatchEvent(new Event('input', { bubbles: true }))
+}
 
-    input!.value = 'sør'
-    input!.dispatchEvent(new Event('input', { bubbles: true }))
-
-    await vi.advanceTimersByTimeAsync(260)
-    await Promise.resolve()
-
-    const listRows = document.querySelectorAll('.list-row')
-    expect(listRows.length).toBe(1)
-    expect(listRows[0]?.textContent).toContain('Sørenga')
+describe('badevann app', () => {
+  it('lists warmest first', async () => {
+    await mount()
+    expect(names()).toEqual(['Bygdøy', 'Sørenga', 'Kalvøya'])
   })
 
-  it('filter change recalculates list', async () => {
-    document.body.innerHTML = '<badevann-app></badevann-app>'
-    await flushAppLoad()
-
-    const select = document.querySelector<HTMLSelectElement>('select#county')
-    select!.value = 'Akershus'
-    select!.dispatchEvent(new Event('change', { bubbles: true }))
-    await Promise.resolve()
-
-    const rows = document.querySelectorAll('.list-row')
-    expect(rows.length).toBe(1)
-    expect(rows[0]?.textContent).toContain('Kalvøya')
+  it('search matches name and municipality', async () => {
+    await mount()
+    search('sør')
+    expect(names()).toEqual(['Sørenga'])
+    search('bærum')
+    expect(names()).toEqual(['Kalvøya'])
   })
 
-  it('clicking a row opens detail panel with correct data', async () => {
-    document.body.innerHTML = '<badevann-app></badevann-app>'
-    await flushAppLoad()
-
-    const target = Array.from(document.querySelectorAll<HTMLButtonElement>('.list-row')).find((button) =>
-      button.textContent?.includes('Kalvøya')
-    )
-
-    target?.click()
-    await Promise.resolve()
-
-    const detail = document.querySelector('bv-beach-detail')
-    expect(detail?.textContent).toContain('Kalvøya')
+  it('shows empty state', async () => {
+    await mount()
+    search('finnes ikke')
+    expect(document.querySelector('.empty')?.textContent).toContain('Fant ingen badeplasser')
   })
 
-  it('top list shows hottest beach first', async () => {
-    document.body.innerHTML = '<badevann-app></badevann-app>'
-    await flushAppLoad()
-
-    const firstTop = document.querySelector('bv-toplist .top-row .name')
-    expect(firstTop?.textContent).toContain('Bygdøy')
+  it('sorts by distance after using position', async () => {
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition: (ok: PositionCallback) =>
+          ok({ coords: { latitude: 59.89, longitude: 10.5 } } as GeolocationPosition)
+      }
+    })
+    await mount()
+    document.querySelector<HTMLButtonElement>('.locate-pill')!.click()
+    expect(document.querySelector<HTMLSelectElement>('#sort')!.value).toBe('distance')
+    expect(names()).toEqual(['Kalvøya', 'Bygdøy', 'Sørenga'])
+    expect(document.querySelector('.list-row .meta')?.textContent).toMatch(/\d,\d km/)
   })
 
-  it('renders empty and error states', async () => {
+  it('renders error state', async () => {
     global.fetch = vi.fn(async () => {
       throw new Error('network error')
     }) as typeof fetch
+    await mount()
+    expect(document.querySelector('.status')?.textContent).toContain('Klarte ikke hente badevannsdata')
+  })
 
-    document.body.innerHTML = '<badevann-app></badevann-app>'
-    await flushAppLoad()
-
-    const status = document.querySelector('bv-status-bar')
-    expect(status?.textContent).toContain('Klarte ikke hente badevannsdata')
+  it('distanceKm: Oslo–Bergen is about 305 km', () => {
+    expect(Math.round(distanceKm({ lat: 59.91, lon: 10.75 }, { lat: 60.39, lon: 5.32 }))).toBeGreaterThan(300)
+    expect(Math.round(distanceKm({ lat: 59.91, lon: 10.75 }, { lat: 60.39, lon: 5.32 }))).toBeLessThan(310)
   })
 })

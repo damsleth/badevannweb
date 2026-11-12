@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'Tamzen';
+  src: url('./Tamzen/Tamzen8x15r.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tamzen';
+  src: url('./Tamzen/Tamzen7x13r.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tamzen';
+  src: url('./Tamzen/Tamzen6x12r.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tamzen';
+  src: url('./Tamzen/Tamzen5x9r.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tamzen';
+  src: url('./Tamzen/Tamzen5x9r.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GohuFont11';
+  src: url('./GohuFont11/GohuFont11.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DepartureMono';
+  src: url('./DepartureMono/DepartureMono.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('./LibreBaskerville/LibreBaskerville[wght].woff2') format('woff2');
+}
+

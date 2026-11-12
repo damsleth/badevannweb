@@ -15,8 +15,8 @@ export default defineUxlConfig({
         "required": true
       },
       {
-        "id": "search-and-filters-update-the-list-and-empty-state",
-        "label": "search and filters update the list and empty state",
+        "id": "search-updates-the-list-and-empty-state",
+        "label": "search updates the list and empty state",
         "path": "/",
         "required": true
       },
@@ -27,8 +27,14 @@ export default defineUxlConfig({
         "required": true
       },
       {
-        "id": "user-can-open-details-from-toplist-and-list",
-        "label": "user can open details from toplist and list",
+        "id": "user-can-expand-a-beach-for-details",
+        "label": "user can expand a beach for details",
+        "path": "/",
+        "required": true
+      },
+      {
+        "id": "use-my-position-sorts-nearest-first",
+        "label": "use my position sorts nearest first",
         "path": "/",
         "required": true
       },
@@ -43,14 +49,17 @@ export default defineUxlConfig({
       "shows-loading-and-then-loaded-data-state": [
         "shows-loading-and-then-loaded-data-state"
       ],
-      "search-and-filters-update-the-list-and-empty-state": [
-        "search-and-filters-update-the-list-and-empty-state"
+      "search-updates-the-list-and-empty-state": [
+        "search-updates-the-list-and-empty-state"
       ],
       "sort-options-reorder-results": [
         "sort-options-reorder-results"
       ],
-      "user-can-open-details-from-toplist-and-list": [
-        "user-can-open-details-from-toplist-and-list"
+      "user-can-expand-a-beach-for-details": [
+        "user-can-expand-a-beach-for-details"
+      ],
+      "use-my-position-sorts-nearest-first": [
+        "use-my-position-sorts-nearest-first"
       ],
       "error-and-stale-status-states-are-shown": [
         "error-and-stale-status-states-are-shown"
@@ -93,8 +102,8 @@ export default defineUxlConfig({
           }
         },
         {
-          "label": "search and filters update the list and empty state",
-          "name": "search-and-filters-update-the-list-and-empty-state",
+          "label": "search updates the list and empty state",
+          "name": "search-updates-the-list-and-empty-state",
           "path": "/",
           "waitFor": "body",
           "settleMs": 200,
@@ -113,8 +122,18 @@ export default defineUxlConfig({
           }
         },
         {
-          "label": "user can open details from toplist and list",
-          "name": "user-can-open-details-from-toplist-and-list",
+          "label": "user can expand a beach for details",
+          "name": "user-can-expand-a-beach-for-details",
+          "path": "/",
+          "waitFor": "body",
+          "settleMs": 200,
+          "screenshot": {
+            "fullPage": true
+          }
+        },
+        {
+          "label": "use my position sorts nearest first",
+          "name": "use-my-position-sorts-nearest-first",
           "path": "/",
           "waitFor": "body",
           "settleMs": 200,

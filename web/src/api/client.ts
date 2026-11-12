@@ -1,21 +1,9 @@
-import type { MetaResponse, TemperatureListResponse, TopResponse } from '../types.js'
+import type { TemperatureListResponse } from '../types.js'
 
-async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url)
+export async function getTemperatures(): Promise<TemperatureListResponse> {
+  const response = await fetch('/api/temperatures')
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status} for ${url}`)
+    throw new Error(`HTTP ${response.status} for /api/temperatures`)
   }
-  return (await response.json()) as T
-}
-
-export function getMeta(): Promise<MetaResponse> {
-  return fetchJson<MetaResponse>('/api/meta')
-}
-
-export function getTemperatures(): Promise<TemperatureListResponse> {
-  return fetchJson<TemperatureListResponse>('/api/temperatures')
-}
-
-export function getTop(limit = 10): Promise<TopResponse> {
-  return fetchJson<TopResponse>(`/api/top?limit=${limit}`)
+  return (await response.json()) as TemperatureListResponse
 }
